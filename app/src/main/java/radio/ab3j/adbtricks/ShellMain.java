@@ -61,10 +61,24 @@ public class ShellMain {
                 // TODO
             } else if (args[0].equals("stop-bluetooth-tethering")) {
                 // TODO
+            } else if (args[0].equals("get-adb-port")) {
+                System.out.println(Integer.toString(get_adb_port()));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static int get_adb_port() throws ReflectiveOperationException {
+        IBinder binder = (IBinder) GET_SERVICE_METHOD.invoke(null, "adb");
+
+        Class<?> iAdbManagerStub = Class.forName("android.debug.IAdbManager$Stub");
+        Method asInterface = iAdbManagerStub.getDeclaredMethod("asInterface", IBinder.class);
+        Object iAbdManagerService = asInterface.invoke(null, binder);
+
+        Class<?> iAdbManager = Class.forName("android.debug.IAdbManager");
+        Method getAdbWirelessPort = iAdbManager.getDeclaredMethod("getAdbWirelessPort");
+        return (int) getAdbWirelessPort.invoke(iAbdManagerService);
     }
 
     public static void start_wifi_tethering() throws ReflectiveOperationException {
