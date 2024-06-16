@@ -55,6 +55,12 @@ public class ShellMain {
                 start_usb_tethering();
             } else if (args[0].equals("start-bluetooth-tethering")) {
                 start_bluetooth_tethering();
+            } else if (args[0].equals("stop-wifi-tethering")) {
+                // TODO
+            } else if (args[0].equals("stop-usb-tethering")) {
+                // TODO
+            } else if (args[0].equals("stop-bluetooth-tethering")) {
+                // TODO
             }
         } catch (Exception e) {
             e.printStackTrace();
