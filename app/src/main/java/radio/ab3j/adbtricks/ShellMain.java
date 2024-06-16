@@ -51,6 +51,10 @@ public class ShellMain {
                 }
             } else if (args[0].equals("start-wifi-tethering")) {
                 start_wifi_tethering();
+            } else if (args[0].equals("start-usb-tethering")) {
+                start_usb_tethering();
+            } else if (args[0].equals("start-bluetooth-tethering")) {
+                start_bluetooth_tethering();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -93,6 +97,82 @@ public class ShellMain {
 
         // Invoke the startTethering method
         startTetheringMethod.invoke(tetheringManager, 0 /* Tethering type */, executor, callbackProxy);
+    }
+
+    public static void start_usb_tethering() throws ReflectiveOperationException {
+        IBinder binder = (IBinder) GET_SERVICE_METHOD.invoke(null, "tethering");
+        Supplier<IBinder> connectorSupplier = () -> binder;
+
+        Class<?> tetheringManagerClass = Class.forName("android.net.TetheringManager");
+        Constructor<?> tetheringManagerConstructor = tetheringManagerClass.getConstructor(Class.forName("android.content.Context"), Supplier.class);
+        Object tetheringManager = tetheringManagerConstructor.newInstance(FakeContext.get(), connectorSupplier);
+
+        Executor executor = Executors.newSingleThreadExecutor();
+
+        // Create a dynamic proxy for StartTetheringCallback
+        Class<?> callbackClass = Class.forName("android.net.TetheringManager$StartTetheringCallback");
+        Object callbackProxy = Proxy.newProxyInstance(
+            callbackClass.getClassLoader(),
+            new Class<?>[]{callbackClass},
+            new InvocationHandler() {
+                @Override
+                public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                    String methodName = method.getName();
+                    if ("onTetheringStarted".equals(methodName)) {
+                        System.out.println("Tethering started successfully.");
+                    } else if ("onTetheringFailed".equals(methodName)) {
+                        System.out.println("Tethering failed to start.");
+                    }
+                    return null;
+                }
+            }
+        );
+
+        // Get the startTethering method
+        Method startTetheringMethod = tetheringManagerClass.getMethod(
+            "startTethering", int.class, Executor.class, callbackClass
+        );
+
+        // Invoke the startTethering method
+        startTetheringMethod.invoke(tetheringManager, 1 /* Tethering type */, executor, callbackProxy);
+    }
+
+    public static void start_bluetooth_tethering() throws ReflectiveOperationException {
+        IBinder binder = (IBinder) GET_SERVICE_METHOD.invoke(null, "tethering");
+        Supplier<IBinder> connectorSupplier = () -> binder;
+
+        Class<?> tetheringManagerClass = Class.forName("android.net.TetheringManager");
+        Constructor<?> tetheringManagerConstructor = tetheringManagerClass.getConstructor(Class.forName("android.content.Context"), Supplier.class);
+        Object tetheringManager = tetheringManagerConstructor.newInstance(FakeContext.get(), connectorSupplier);
+
+        Executor executor = Executors.newSingleThreadExecutor();
+
+        // Create a dynamic proxy for StartTetheringCallback
+        Class<?> callbackClass = Class.forName("android.net.TetheringManager$StartTetheringCallback");
+        Object callbackProxy = Proxy.newProxyInstance(
+            callbackClass.getClassLoader(),
+            new Class<?>[]{callbackClass},
+            new InvocationHandler() {
+                @Override
+                public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                    String methodName = method.getName();
+                    if ("onTetheringStarted".equals(methodName)) {
+                        System.out.println("Tethering started successfully.");
+                    } else if ("onTetheringFailed".equals(methodName)) {
+                        System.out.println("Tethering failed to start.");
+                    }
+                    return null;
+                }
+            }
+        );
+
+        // Get the startTethering method
+        Method startTetheringMethod = tetheringManagerClass.getMethod(
+            "startTethering", int.class, Executor.class, callbackClass
+        );
+
+        // Invoke the startTethering method
+        startTetheringMethod.invoke(tetheringManager, 2 /* Tethering type */, executor, callbackProxy);
     }
 
     public static CameraCharacteristics getCameraCharacteristics(String cameraId) throws ReflectiveOperationException {
