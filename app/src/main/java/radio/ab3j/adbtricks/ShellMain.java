@@ -6,6 +6,8 @@ import android.os.IBinder;
 
 import android.net.wifi.WifiConfiguration;
 
+import android.hardware.camera2.CameraCharacteristics;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -30,10 +32,38 @@ public class ShellMain {
                 for (WifiConfiguration config : networks) {
                     System.out.println(config.SSID + ": " + config.preSharedKey);
                 }
+            } else if (args[0].equals("list-hidden-cameras")) {
+                for (String id : getCameraIdList()) {
+                    CameraCharacteristics characteristics = getCameraCharacteristics(id);
+                    int[] availableCapabilities = characteristics.get(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES);
+                    for (int cap : availableCapabilities) {
+                        if (cap == CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES_SYSTEM_CAMERA) {
+                            System.out.println(id);
+                        }
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static CameraCharacteristics getCameraCharacteristics(String cameraId) throws ReflectiveOperationException {
+        Class<?> cameraManagerClass = Class.forName("android.hardware.camera2.CameraManager");
+        Constructor<?> cameraManagerConstructor = cameraManagerClass.getConstructor(Class.forName("android.content.Context"));
+        Object cameraManager = cameraManagerConstructor.newInstance(FakeContext.get());
+
+        Method getCameraCharacteristics = cameraManagerClass.getDeclaredMethod("getCameraCharacteristics", String.class);
+        return (CameraCharacteristics) getCameraCharacteristics.invoke(cameraManager, cameraId);
+    }
+
+    public static String[] getCameraIdList() throws ReflectiveOperationException {
+        Class<?> cameraManagerClass = Class.forName("android.hardware.camera2.CameraManager");
+        Constructor<?> cameraManagerConstructor = cameraManagerClass.getConstructor(Class.forName("android.content.Context"));
+        Object cameraManager = cameraManagerConstructor.newInstance(FakeContext.get());
+
+        Method getCameraIdList = cameraManagerClass.getDeclaredMethod("getCameraIdList");
+        return (String[]) getCameraIdList.invoke(cameraManager);
     }
 
     public static List<WifiConfiguration> getPrivilegedConfiguredNetworks() throws ReflectiveOperationException {
