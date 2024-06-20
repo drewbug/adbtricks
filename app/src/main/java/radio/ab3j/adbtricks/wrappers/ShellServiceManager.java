@@ -18,9 +18,18 @@ public final class ShellServiceManager {
     }
 
     private static ShellWifiManager wifiManager;
+    private static ShellTetheringManager tetheringManager;
 
     private ShellServiceManager() {
         /* not instantiable */
+    }
+
+    static IBinder getService(String service) {
+        try {
+            return (IBinder) GET_SERVICE_METHOD.invoke(null, service);
+        } catch (ReflectiveOperationException e) {
+            throw new AssertionError(e);
+        }
     }
 
     static IInterface getService(String service, String type) {
@@ -38,6 +47,13 @@ public final class ShellServiceManager {
             wifiManager = ShellWifiManager.create();
         }
         return wifiManager;
+    }
+
+    public static ShellTetheringManager getTetheringManager() {
+        if (tetheringManager == null) {
+            tetheringManager = ShellTetheringManager.create();
+        }
+        return tetheringManager;
     }
 
 }

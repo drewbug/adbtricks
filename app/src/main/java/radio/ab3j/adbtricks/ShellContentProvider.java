@@ -36,7 +36,7 @@ public class ShellContentProvider extends ContentProvider {
 
         try (OutputStream output = new ParcelFileDescriptor.AutoCloseOutputStream(pipe[1])) {
             String apk = this.getContext().getPackageCodePath();
-            String command = "function adbtricks { CLASSPATH=" + apk + " app_process / radio.ab3j.adbtricks.ShellMain $@; }";
+            String command = "function adbtricks { CLASSPATH=" + apk + " app_process / radio.ab3j.adbtricks.ShellMain34 $@; }";
             output.write(command.getBytes());
             output.flush();
             output.close();
@@ -54,7 +54,7 @@ public class ShellContentProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         String apk = this.getContext().getPackageCodePath();
-        String command = "function adbtricks { CLASSPATH=" + apk + " app_process / radio.ab3j.adbtricks.ShellMain $@; }";
+        String command = "function adbtricks { CLASSPATH=" + apk + " app_process / radio.ab3j.adbtricks.ShellMain34 $@; }";
         MatrixCursor cursor = new MatrixCursor(new String[]{""});
         cursor.addRow(new Object[]{"\n" + command});
         return cursor;
