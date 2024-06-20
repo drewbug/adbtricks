@@ -78,6 +78,24 @@ public class ShellMain34 {
                 // TODO
             } else if (args[0].equals("dump-wifi-debugging")) {
                 System.out.println(Integer.toString(get_adb_port()));
+            } else if (args[0].equals("get-ringer-mode")) {
+                switch (ShellServiceManager.getAudioManager().getRingerMode()) {
+                    case 0:
+                        System.out.println("silent");
+                        break;
+                    case 1:
+                        System.out.println("vibrate");
+                        break;
+                    case 2:
+                        System.out.println("normal");
+                        break;
+                }
+            } else if (args[0].equals("set-ringer-silent")) {
+                ShellServiceManager.getAudioManager().setRingerMode(0);
+            } else if (args[0].equals("set-ringer-vibrate")) {
+                ShellServiceManager.getAudioManager().setRingerMode(1);
+            } else if (args[0].equals("set-ringer-normal")) {
+                ShellServiceManager.getAudioManager().setRingerMode(2);
             }
         } catch (Exception e) {
             e.printStackTrace();

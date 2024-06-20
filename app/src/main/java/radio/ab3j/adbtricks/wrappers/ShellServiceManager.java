@@ -19,6 +19,7 @@ public final class ShellServiceManager {
 
     private static ShellWifiManager wifiManager;
     private static ShellTetheringManager tetheringManager;
+    private static ShellAudioManager audioManager;
 
     private ShellServiceManager() {
         /* not instantiable */
@@ -54,6 +55,13 @@ public final class ShellServiceManager {
             tetheringManager = ShellTetheringManager.create();
         }
         return tetheringManager;
+    }
+
+    public static ShellAudioManager getAudioManager() {
+        if (audioManager == null) {
+            audioManager = ShellAudioManager.create();
+        }
+        return audioManager;
     }
 
 }
