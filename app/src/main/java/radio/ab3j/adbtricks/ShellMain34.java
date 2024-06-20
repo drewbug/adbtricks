@@ -6,6 +6,7 @@ import com.genymobile.scrcpy.FakeContext;
 
 import android.os.IBinder;
 
+import android.net.LinkAddress;
 import android.net.wifi.WifiConfiguration;
 
 import android.hardware.camera2.CameraCharacteristics;
@@ -52,11 +53,23 @@ public class ShellMain34 {
                     }
                 }
             } else if (args[0].equals("start-wifi-tethering")) {
-                ShellServiceManager.getTetheringManager().startTethering(0);
+                if (args.length == 1) {
+                    ShellServiceManager.getTetheringManager().startTethering(0);
+                } else if (args.length == 3) {
+                    ShellServiceManager.getTetheringManager().startTethering(0, new LinkAddress(args[1]), new LinkAddress(args[2]));
+                }
             } else if (args[0].equals("start-usb-tethering")) {
-                ShellServiceManager.getTetheringManager().startTethering(1);
+                if (args.length == 1) {
+                    ShellServiceManager.getTetheringManager().startTethering(1);
+                } else if (args.length == 3) {
+                    ShellServiceManager.getTetheringManager().startTethering(1, new LinkAddress(args[1]), new LinkAddress(args[2]));
+                }
             } else if (args[0].equals("start-bluetooth-tethering")) {
-                ShellServiceManager.getTetheringManager().startTethering(2);
+                if (args.length == 1) {
+                    ShellServiceManager.getTetheringManager().startTethering(2);
+                } else if (args.length == 3) {
+                    ShellServiceManager.getTetheringManager().startTethering(2, new LinkAddress(args[1]), new LinkAddress(args[2]));
+                }
             } else if (args[0].equals("stop-wifi-tethering")) {
                 // TODO
             } else if (args[0].equals("stop-usb-tethering")) {

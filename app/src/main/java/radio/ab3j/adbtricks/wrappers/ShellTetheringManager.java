@@ -2,6 +2,7 @@ package radio.ab3j.adbtricks.wrappers;
 
 import com.genymobile.scrcpy.FakeContext;
 
+import android.net.LinkAddress;
 import android.net.TetheringManager;
 import android.os.IBinder;
 
@@ -40,6 +41,14 @@ public final class ShellTetheringManager {
 
     public void startTethering(int type) {
         TetheringManager.TetheringRequest.Builder builder = new TetheringManager.TetheringRequest.Builder(type);
+
+        manager.startTethering(builder.build(), null, null);
+    }
+
+    public void startTethering(int type, LinkAddress localIPv4Address, LinkAddress clientAddress) {
+        TetheringManager.TetheringRequest.Builder builder = new TetheringManager.TetheringRequest.Builder(type);
+
+        builder.setStaticIpv4Addresses(localIPv4Address, clientAddress);
 
         manager.startTethering(builder.build(), null, null);
     }
