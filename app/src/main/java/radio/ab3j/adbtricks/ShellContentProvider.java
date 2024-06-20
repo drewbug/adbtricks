@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 
@@ -18,6 +19,10 @@ public class ShellContentProvider extends ContentProvider {
     public boolean onCreate() {
         return true;
     }
+
+    /*
+        eval $(content read --uri content://adbtricks) && adbtricks --help
+    */
 
     @Override
     public ParcelFileDescriptor openFile(Uri uri, String mode) throws FileNotFoundException {
@@ -42,9 +47,17 @@ public class ShellContentProvider extends ContentProvider {
         return pipe[0];
     }
 
+    /*
+        eval $(content query --uri content://adbtricks | tail -n 1) && adbtricks --help
+    */
+
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        throw new UnsupportedOperationException("Not implemented");
+        String apk = this.getContext().getPackageCodePath();
+        String command = "function adbtricks { CLASSPATH=" + apk + " app_process / radio.ab3j.adbtricks.ShellMain $@; }";
+        MatrixCursor cursor = new MatrixCursor(new String[]{""});
+        cursor.addRow(new Object[]{"\n" + command});
+        return cursor;
     }
 
     @Override
