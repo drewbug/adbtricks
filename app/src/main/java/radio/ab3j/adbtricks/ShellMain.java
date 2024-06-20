@@ -61,7 +61,7 @@ public class ShellMain {
                 // TODO
             } else if (args[0].equals("stop-bluetooth-tethering")) {
                 // TODO
-            } else if (args[0].equals("get-adb-port")) {
+            } else if (args[0].equals("dump-wifi-debugging")) {
                 System.out.println(Integer.toString(get_adb_port()));
             }
         } catch (Exception e) {
