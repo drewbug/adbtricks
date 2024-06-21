@@ -37,7 +37,9 @@ public class ShellMain34 {
     public static void main(String[] args) {
         try {
             if (args[0].equals("--help")) {
-                System.out.println("\nwelcome to adbtricks v1.0.0\n");
+                System.out.println("===========================");
+                System.out.println("welcome to adbtricks v1.0.0");
+                System.out.println("===========================\n");
 
                 System.out.println("Usage:\n");
 
@@ -55,18 +57,6 @@ public class ShellMain34 {
 
                 System.out.println(" adbtricks start-bluetooth-tethering [device-ip] [client-ip]");
                 System.out.println(" (turns on bluetooth tethering with optional IPv4 configuration)\n");
-
-                System.out.println(" adbtricks stop-wifi-tethering");
-                System.out.println(" (turns off wifi tethering)\n");
-
-                System.out.println(" adbtricks stop-usb-tethering");
-                System.out.println(" (turns off usb tethering)\n");
-
-                System.out.println(" adbtricks stop-bluetooth-tethering");
-                System.out.println(" (turns off bluetooth tethering)\n");
-
-                System.out.println(" adbtricks get-ringer-mode");
-                System.out.println(" (outputs current ringer configuration)\n");
 
                 System.out.println(" adbtricks set-ringer-normal");
                 System.out.println(" (toggles \"normal\" ringer mode on)\n");
