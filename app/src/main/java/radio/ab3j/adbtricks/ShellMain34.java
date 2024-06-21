@@ -16,6 +16,10 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.function.Supplier;
 
+import android.telephony.SubscriptionInfo;
+import android.telephony.UiccCardInfo;
+import android.telephony.UiccPortInfo;
+
 import android.content.Context;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
@@ -66,6 +70,9 @@ public class ShellMain34 {
 
                 System.out.println(" adbtricks set-ringer-silent");
                 System.out.println(" (toggles \"silent\" ringer mode on)\n");
+
+                System.out.println(" adbtricks list-sim-cards");
+                System.out.println(" (list physical and e-sim profiles)\n");
 
                 System.out.println(" adbtricks dump-debugging-info");
                 System.out.println(" (outputs adb daemon information)");
@@ -129,6 +136,19 @@ public class ShellMain34 {
                 ShellServiceManager.getAudioManager().setRingerMode(1);
             } else if (args[0].equals("set-ringer-normal")) {
                 ShellServiceManager.getAudioManager().setRingerMode(2);
+            } else if (args[0].equals("list-sim-cards")) {
+                for (UiccCardInfo card : ShellServiceManager.getTelephonyManager().getUiccCardsInfo()) {
+                    System.out.println(card.toString());
+
+                    for (UiccPortInfo port : card.getPorts()) {
+                        System.out.println(port.toString());
+                    }
+
+                    System.out.println();
+                }
+                for (SubscriptionInfo sub : ShellServiceManager.getSubscriptionManager().getAvailableSubscriptionInfoList()) {
+                    System.out.println(sub.toString());
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

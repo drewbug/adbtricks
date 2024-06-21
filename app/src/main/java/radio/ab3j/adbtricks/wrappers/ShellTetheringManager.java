@@ -18,7 +18,7 @@ public final class ShellTetheringManager {
 
     static ShellTetheringManager create() {
         try {
-            IBinder service = ShellServiceManager.getService("tethering");
+            IBinder service = android.os.ServiceManager.getService("tethering");
 
             Constructor ctor = Class.forName("android.net.TetheringManager").getConstructors()[0];
 
