@@ -35,6 +35,10 @@ public class ShellMain34 {
     }
 
     public static void main(String[] args) {
+        if (args.length == 0) {
+            System.exit(0);
+        }
+
         try {
             if (args[0].equals("--help")) {
                 System.out.println("===========================");
