@@ -1,15 +1,25 @@
 ![](hello-dalle.png)
 
-Initialize `adbtricks` within an `adb shell` session with:
+First, install `adbtricks` from the Play Store or manually via:
 
 ```
-alias adbtricks=$(content read --uri content://adbtricks)
+$ adb install adbtricks.apk
+```
+
+then initialize it within any `adb shell` session with:
+
+```
+$ alias adbtricks=$(content read --uri content://adbtricks)
 ```
 
 or just use `adbtricks.sh` directly from your workstation:
 
 ```
-$ ./adbtricks.sh --help
+$ install adbtricks.sh $HOME/.local/bin/adbtricks
+```
+
+```
+$ adbtricks --help
 ===========================
 welcome to adbtricks v1.0.0
 ===========================
