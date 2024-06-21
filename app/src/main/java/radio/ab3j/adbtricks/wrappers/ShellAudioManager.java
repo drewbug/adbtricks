@@ -29,11 +29,11 @@ public final class ShellAudioManager {
     }
 
     public int getRingerMode() {
-        return manager.getRingerMode();
+        return manager.getRingerModeInternal();
     }
 
     public void setRingerMode(int ringerMode) {
-        manager.setRingerMode(ringerMode);
+        manager.setRingerModeInternal(ringerMode);
     }
 
 }
