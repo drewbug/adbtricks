@@ -16,6 +16,10 @@ repositories {
     mavenCentral()
 }
 
+dependencies {
+    implementation 'org.objenesis:objenesis:3.2'
+}
+
 android {
     namespace 'radio.ab3j.adbtricks'
     compileSdk 34

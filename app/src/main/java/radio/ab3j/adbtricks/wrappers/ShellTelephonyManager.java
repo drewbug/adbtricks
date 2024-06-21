@@ -2,12 +2,14 @@ package radio.ab3j.adbtricks.wrappers;
 
 import com.genymobile.scrcpy.FakeContext;
 
+import org.objenesis.ObjenesisHelper;
+
 import android.content.Context;
 import android.telephony.TelephonyManager;
 import android.telephony.UiccCardInfo;
 import android.telephony.UiccPortInfo;
 
-import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.util.List;
 
 public final class ShellTelephonyManager {
@@ -16,9 +18,13 @@ public final class ShellTelephonyManager {
 
     static ShellTelephonyManager create() {
         try {
-            Constructor ctor = Class.forName("android.telephony.TelephonyManager").getConstructor(Context.class);
+            Field contextField = TelephonyManager.class.getDeclaredField("mContext");
 
-            Object manager = ctor.newInstance(FakeContext.get());
+            contextField.setAccessible(true);
+
+            Object manager = ObjenesisHelper.newInstance(TelephonyManager.class);
+
+            contextField.set(manager, FakeContext.get());
 
             return new ShellTelephonyManager(manager);
         } catch (ReflectiveOperationException e) {
