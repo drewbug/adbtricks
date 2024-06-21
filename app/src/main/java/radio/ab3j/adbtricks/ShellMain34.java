@@ -35,12 +35,8 @@ public class ShellMain34 {
     }
 
     public static void main(String[] args) {
-        if (args.length == 0) {
-            System.exit(0);
-        }
-
         try {
-            if (args[0].equals("--help")) {
+            if (args.length == 0) {
                 System.out.println("===========================");
                 System.out.println("welcome to adbtricks v1.0.0");
                 System.out.println("===========================\n");
@@ -72,7 +68,7 @@ public class ShellMain34 {
                 System.out.println(" (toggles \"silent\" ringer mode on)\n");
 
                 System.out.println(" adbtricks dump-debugging-info");
-                System.out.println(" (outputs adb daemon information)\n");
+                System.out.println(" (outputs adb daemon information)");
             } else if (args[0].equals("dump-wifi-keys")) {
                 List<WifiConfiguration> networks = ShellServiceManager.getWifiManager().getPrivilegedConfiguredNetworks();
 

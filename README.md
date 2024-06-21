@@ -19,7 +19,6 @@ $ source adbtricks.sh
 ```
 
 ```
-$ adbtricks --help
 ===========================
 welcome to adbtricks v1.0.0
 ===========================
