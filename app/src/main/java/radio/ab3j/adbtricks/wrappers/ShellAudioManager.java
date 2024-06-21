@@ -2,10 +2,12 @@ package radio.ab3j.adbtricks.wrappers;
 
 import com.genymobile.scrcpy.FakeContext;
 
+import org.objenesis.ObjenesisHelper;
+
 import android.content.Context;
 import android.media.AudioManager;
 
-import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.util.List;
 
 public final class ShellAudioManager {
@@ -14,9 +16,13 @@ public final class ShellAudioManager {
 
     static ShellAudioManager create() {
         try {
-            Constructor ctor = Class.forName("android.media.AudioManager").getConstructor(Context.class);
+            Field contextField = AudioManager.class.getDeclaredField("mOriginalContext");
 
-            Object manager = ctor.newInstance(FakeContext.get());
+            contextField.setAccessible(true);
+
+            Object manager = ObjenesisHelper.newInstance(AudioManager.class);
+
+            contextField.set(manager, FakeContext.get());
 
             return new ShellAudioManager(manager);
         } catch (ReflectiveOperationException e) {

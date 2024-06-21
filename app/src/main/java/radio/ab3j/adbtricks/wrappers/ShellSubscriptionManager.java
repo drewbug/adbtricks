@@ -2,11 +2,13 @@ package radio.ab3j.adbtricks.wrappers;
 
 import com.genymobile.scrcpy.FakeContext;
 
+import org.objenesis.ObjenesisHelper;
+
 import android.content.Context;
 import android.telephony.SubscriptionManager;
 import android.telephony.SubscriptionInfo;
 
-import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.util.List;
 
 public final class ShellSubscriptionManager {
@@ -15,9 +17,13 @@ public final class ShellSubscriptionManager {
 
     static ShellSubscriptionManager create() {
         try {
-            Constructor ctor = Class.forName("android.telephony.SubscriptionManager").getConstructor(Context.class);
+            Field contextField = SubscriptionManager.class.getDeclaredField("mContext");
 
-            Object manager = ctor.newInstance(FakeContext.get());
+            contextField.setAccessible(true);
+
+            Object manager = ObjenesisHelper.newInstance(SubscriptionManager.class);
+
+            contextField.set(manager, FakeContext.get());
 
             return new ShellSubscriptionManager(manager);
         } catch (ReflectiveOperationException e) {
