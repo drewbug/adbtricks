@@ -20,9 +20,7 @@ public class ShellContentProvider extends ContentProvider {
         return true;
     }
 
-    /*
-        eval $(content read --uri content://adbtricks) && adbtricks --help
-    */
+    // $(content read --uri content://adbtricks) --help
 
     @Override
     public ParcelFileDescriptor openFile(Uri uri, String mode) throws FileNotFoundException {
@@ -36,7 +34,7 @@ public class ShellContentProvider extends ContentProvider {
 
         try (OutputStream output = new ParcelFileDescriptor.AutoCloseOutputStream(pipe[1])) {
             String apk = this.getContext().getPackageCodePath();
-            String command = "function adbtricks { CLASSPATH=" + apk + " app_process / radio.ab3j.adbtricks.ShellMain34 $@; }";
+            String command = "app_process -cp " + apk + " / radio.ab3j.adbtricks.ShellMain34";
             output.write(command.getBytes());
             output.flush();
             output.close();
@@ -47,14 +45,12 @@ public class ShellContentProvider extends ContentProvider {
         return pipe[0];
     }
 
-    /*
-        eval $(content query --uri content://adbtricks | tail -n 1) && adbtricks --help
-    */
+    // $(content query --uri content://adbtricks | tail -n 1) --help
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         String apk = this.getContext().getPackageCodePath();
-        String command = "function adbtricks { CLASSPATH=" + apk + " app_process / radio.ab3j.adbtricks.ShellMain34 $@; }";
+        String command = "app_process -cp " + apk + " / radio.ab3j.adbtricks.ShellMain34";
         MatrixCursor cursor = new MatrixCursor(new String[]{""});
         cursor.addRow(new Object[]{"\n" + command});
         return cursor;

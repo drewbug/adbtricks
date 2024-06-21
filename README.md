@@ -1,10 +1,15 @@
 ![](hello-dalle.png)
 
-`adb install adbtricks.apk`
-
-`adb shell 'eval $(content read --uri content://adbtricks) && adbtricks --help'`
+Initialize `adbtricks` within an `adb shell` session with:
 
 ```
+alias adbtricks=$(content read --uri content://adbtricks)
+```
+
+or just use `adbtricks.sh` directly from your workstation:
+
+```
+$ ./adbtricks.sh --help
 ===========================
 welcome to adbtricks v1.0.0
 ===========================
