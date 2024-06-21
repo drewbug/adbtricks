@@ -1,1 +1,6 @@
-adb shell -t '$(content read --uri content://adbtricks)' $@
+#!/bin/sh
+
+adbtricks() { adb shell '$(content read --uri content://adbtricks)' $@; }
+
+if [ $# -ne 0 ]; then adbtricks $@; fi
+

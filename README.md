@@ -15,7 +15,7 @@ $ alias adbtricks=$(content read --uri content://adbtricks)
 or just use `adbtricks.sh` directly from your workstation:
 
 ```
-$ install adbtricks.sh $HOME/.local/bin/adbtricks
+$ source adbtricks.sh
 ```
 
 ```
