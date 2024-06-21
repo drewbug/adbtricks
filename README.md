@@ -9,7 +9,7 @@ $ adb install adbtricks.apk
 then initialize it within any `adb shell` session with:
 
 ```
-$ alias adbtricks=$(content read --uri content://adbtricks)
+$ alias adbtricks="$(content read --uri content://adbtricks)"
 ```
 
 or just use `adbtricks.sh` directly from your workstation:
