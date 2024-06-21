@@ -36,7 +36,50 @@ public class ShellMain34 {
 
     public static void main(String[] args) {
         try {
-            if (args[0].equals("dump-wifi-keys")) {
+            if (args[0].equals("--help")) {
+                System.out.println("\nwelcome to adbtricks v1.0.0\n");
+
+                System.out.println("Usage:\n");
+
+                System.out.println(" adbtricks dump-wifi-keys");
+                System.out.println(" (outputs all wifi passwords from device memory)\n");
+
+                System.out.println(" adbtricks list-hidden-cameras");
+                System.out.println(" (read https://source.android.com/docs/core/camera/system-cameras for info)\n");
+
+                System.out.println(" adbtricks start-wifi-tethering [device-ip] [client-ip]");
+                System.out.println(" (turns on wifi tethering with optional IPv4 configuration)\n");
+
+                System.out.println(" adbtricks start-usb-tethering [device-ip] [client-ip]");
+                System.out.println(" (turns on usb tethering with optional IPv4 configuration)\n");
+
+                System.out.println(" adbtricks start-bluetooth-tethering [device-ip] [client-ip]");
+                System.out.println(" (turns on bluetooth tethering with optional IPv4 configuration)\n");
+
+                System.out.println(" adbtricks stop-wifi-tethering");
+                System.out.println(" (turns off wifi tethering)\n");
+
+                System.out.println(" adbtricks stop-usb-tethering");
+                System.out.println(" (turns off usb tethering)\n");
+
+                System.out.println(" adbtricks stop-bluetooth-tethering");
+                System.out.println(" (turns off bluetooth tethering)\n");
+
+                System.out.println(" adbtricks get-ringer-mode");
+                System.out.println(" (outputs current ringer configuration)\n");
+
+                System.out.println(" adbtricks set-ringer-normal");
+                System.out.println(" (toggles \"normal\" ringer mode on)\n");
+
+                System.out.println(" adbtricks set-ringer-vibrate");
+                System.out.println(" (toggles \"vibrate\" ringer mode on)\n");
+
+                System.out.println(" adbtricks set-ringer-silent");
+                System.out.println(" (toggles \"silent\" ringer mode on)\n");
+
+                System.out.println(" adbtricks dump-debugging-info");
+                System.out.println(" (outputs adb daemon information)\n");
+            } else if (args[0].equals("dump-wifi-keys")) {
                 List<WifiConfiguration> networks = ShellServiceManager.getWifiManager().getPrivilegedConfiguredNetworks();
 
                 for (WifiConfiguration config : networks) {
