@@ -26,6 +26,13 @@ import java.lang.reflect.Proxy;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import org.apache.sshd.server.ServerBuilder;
+import org.apache.sshd.server.SshServer;
+import org.apache.sshd.server.auth.pubkey.AcceptAllPublickeyAuthenticator;
+import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
+import org.apache.sshd.server.shell.ProcessShellCommandFactory;
+import org.apache.sshd.server.shell.InteractiveProcessShellFactory;
+
 public class ShellMain34 {
 
     private static final Method GET_SERVICE_METHOD;
@@ -73,6 +80,9 @@ public class ShellMain34 {
 
                 System.out.println(" adbtricks list-sim-cards");
                 System.out.println(" (list physical and e-sim profiles)\n");
+
+                System.out.println(" adbtricks start-ssh-server");
+                System.out.println(" (start an ssh server daemon for remote access)\n");
 
                 System.out.println(" adbtricks dump-debugging-info");
                 System.out.println(" (outputs adb daemon information)");
@@ -149,6 +159,24 @@ public class ShellMain34 {
                 for (SubscriptionInfo sub : ShellServiceManager.getSubscriptionManager().getAvailableSubscriptionInfoList()) {
                     System.out.println(sub.toString());
                 }
+            } else if (args[0].equals("start-ssh-server")) {
+                System.setProperty("user.home", "/");
+                ServerBuilder builder = ServerBuilder.builder();
+
+                SshServer sshd = builder.build();
+
+                sshd.setPort(2222);
+
+                sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
+
+                sshd.setPublickeyAuthenticator(AcceptAllPublickeyAuthenticator.INSTANCE);
+                sshd.setPasswordAuthenticator((username, password, session) -> username.equals("shell"));
+
+                sshd.setShellFactory(InteractiveProcessShellFactory.INSTANCE);
+                sshd.setCommandFactory(ProcessShellCommandFactory.INSTANCE);
+
+                sshd.start();
+                Thread.sleep(Long.MAX_VALUE);
             }
         } catch (Exception e) {
             e.printStackTrace();
