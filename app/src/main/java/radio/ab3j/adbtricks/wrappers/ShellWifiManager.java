@@ -1,34 +1,32 @@
 package radio.ab3j.adbtricks.wrappers;
 
+import org.apache.commons.lang3.reflect.ConstructorUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
+
 import com.genymobile.scrcpy.FakeContext;
 
-import org.objenesis.ObjenesisHelper;
-
-import android.net.wifi.WifiManager;
 import android.net.wifi.WifiConfiguration;
-import android.os.IInterface;
+import android.os.IBinder;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 public final class ShellWifiManager {
 
-    private final WifiManager manager;
+    private static final String SERVICE_NAME = android.content.Context.WIFI_SERVICE;
+
+    private static final String SERVICE_CLASS = "android.net.wifi.IWifiManager$Stub";
+
+    private static final String MANAGER_CLASS = "android.net.wifi.WifiManager";
+
+    private final Object mService;
 
     static ShellWifiManager create() {
         try {
-            Field contextField = WifiManager.class.getDeclaredField("mContext");
-            Field serviceField = WifiManager.class.getDeclaredField("mService");
+            IBinder b = ShellServiceManager.getService(SERVICE_NAME);
 
-            contextField.setAccessible(true);
-            serviceField.setAccessible(true);
+            Object service = MethodUtils.invokeStaticMethod(Class.forName(SERVICE_CLASS), "asInterface", b);
 
-            Object manager = ObjenesisHelper.newInstance(WifiManager.class);
-
-            Object service = ShellServiceManager.getService("wifi", "android.net.wifi.IWifiManager");
-
-            contextField.set(manager, FakeContext.get());
-            serviceField.set(manager, service);
+            Object manager = ConstructorUtils.invokeConstructor(Class.forName(MANAGER_CLASS), FakeContext.get(), service, null);
 
             return new ShellWifiManager(manager);
         } catch (ReflectiveOperationException e) {
@@ -36,12 +34,16 @@ public final class ShellWifiManager {
         }
     }
 
-    private ShellWifiManager(Object manager) {
-        this.manager = (WifiManager) manager;
+    private ShellWifiManager(Object service) {
+        this.mService = service;
     }
 
     public List<WifiConfiguration> getPrivilegedConfiguredNetworks() {
-        return manager.getPrivilegedConfiguredNetworks();
+        try {
+            return (List<WifiConfiguration>) MethodUtils.invokeMethod(this.mService, "getPrivilegedConfiguredNetworks");
+        } catch (ReflectiveOperationException e) {
+            throw new AssertionError(e);
+        }
     }
 
 }
