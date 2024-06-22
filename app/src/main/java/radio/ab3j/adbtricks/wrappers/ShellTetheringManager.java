@@ -1,56 +1,60 @@
 package radio.ab3j.adbtricks.wrappers;
 
+import org.apache.commons.lang3.reflect.ConstructorUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
+
 import com.genymobile.scrcpy.FakeContext;
 
 import android.net.LinkAddress;
-import android.net.TetheringManager;
-import android.os.IBinder;
-
-import java.lang.reflect.Constructor;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.function.Supplier;
-
 
 public final class ShellTetheringManager {
 
-    private final TetheringManager manager;
+    private static final Class REQUEST_BUILDER_CLASS;
 
-    static ShellTetheringManager create() {
+    static {
         try {
-            IBinder service = android.os.ServiceManager.getService("tethering");
-
-            Constructor ctor = Class.forName("android.net.TetheringManager").getConstructors()[0];
-
-            Object manager = ctor.newInstance(FakeContext.get(), new Supplier<IBinder>() {
-                @Override
-                public IBinder get() {
-                    return service;
-                }
-            });
-
-            return new ShellTetheringManager(manager);
+            REQUEST_BUILDER_CLASS = Class.forName("android.net.TetheringManager$TetheringRequest$Builder");
         } catch (ReflectiveOperationException e) {
             throw new AssertionError(e);
         }
     }
 
-    private ShellTetheringManager(Object manager) {
-        this.manager = (TetheringManager) manager;
+    private final Object mService;
+
+    static ShellTetheringManager create() {
+        Object service = FakeContext.get().getSystemService("tethering");
+
+        return new ShellTetheringManager(service);
+    }
+
+    private ShellTetheringManager(Object service) {
+        this.mService = service;
     }
 
     public void startTethering(int type) {
-        TetheringManager.TetheringRequest.Builder builder = new TetheringManager.TetheringRequest.Builder(type);
+        try {
+            Object builder = ConstructorUtils.invokeConstructor(REQUEST_BUILDER_CLASS, type);
 
-        manager.startTethering(builder.build(), null, null);
+            Object request = MethodUtils.invokeMethod(builder, "build");
+
+            MethodUtils.invokeMethod(this.mService, "startTethering", request, null, null);
+        } catch (ReflectiveOperationException e) {
+            throw new AssertionError(e);
+        }
     }
 
     public void startTethering(int type, LinkAddress localIPv4Address, LinkAddress clientAddress) {
-        TetheringManager.TetheringRequest.Builder builder = new TetheringManager.TetheringRequest.Builder(type);
+        try {
+            Object builder = ConstructorUtils.invokeConstructor(REQUEST_BUILDER_CLASS, type);
 
-        builder.setStaticIpv4Addresses(localIPv4Address, clientAddress);
+            MethodUtils.invokeMethod(builder, "setStaticIpv4Addresses", localIPv4Address, clientAddress);
 
-        manager.startTethering(builder.build(), null, null);
+            Object request = MethodUtils.invokeMethod(builder, "build");
+
+            MethodUtils.invokeMethod(this.mService, "startTethering", request, null, null);
+        } catch (ReflectiveOperationException e) {
+            throw new AssertionError(e);
+        }
     }
 
 }

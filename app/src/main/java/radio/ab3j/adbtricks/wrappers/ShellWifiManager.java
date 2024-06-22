@@ -25,10 +25,9 @@ public final class ShellWifiManager {
 
             Object manager = ObjenesisHelper.newInstance(WifiManager.class);
 
-            Object context = FakeContext.get();
             Object service = ShellServiceManager.getService("wifi", "android.net.wifi.IWifiManager");
 
-            contextField.set(manager, context);
+            contextField.set(manager, FakeContext.get());
             serviceField.set(manager, service);
 
             return new ShellWifiManager(manager);
