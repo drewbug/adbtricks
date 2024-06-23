@@ -6,7 +6,7 @@ First, install `adbtricks` from the Play Store or manually via:
 $ adb install adbtricks.apk
 ```
 
-then initialize it within any `adb shell` session with:
+then load it into any `adb shell` session with:
 
 ```
 $ alias adbtricks="$(content read --uri content://adbtricks)"
